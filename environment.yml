@@ -7,4 +7,5 @@ dependencies:
   - scrublet
   - python-igraph
   - leidenalg
+  - pytest
   - pip
