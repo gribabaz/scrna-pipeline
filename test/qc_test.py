@@ -44,7 +44,7 @@ def test_filter_cells(small_adata):
     assert adata.obs_names.tolist() == ["cell_0", "cell_3", "cell_4"]
 
 
-def test_filter_genes(small_adata):
+def test_filter_genes(small_adata, min_cells=3):
     adata = filter_genes(small_adata)
     assert "GENE_B" in adata.var_names
     assert adata.n_vars <= small_adata.n_vars

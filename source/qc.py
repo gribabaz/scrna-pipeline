@@ -55,7 +55,7 @@ def filter_cells(adata, min_genes, max_genes, max_pct_mt):
 def filter_genes(adata):
     """Filter out unexpressed genes."""
     logger.info(f"Filtering {adata.n_vars} genes")
-    sc.pp.filter_genes(adata, min_cells=3)
+    sc.pp.filter_genes(adata, min_cells=min_cells)
     logger.info(f"Genes remaining: {adata.n_vars}")
     return adata
 
@@ -74,11 +74,12 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--input", required=True)
     parser.add_argument("--output", required=True)
-    parser.add_argument("--min_genes", type=int, default=200)
-    parser.add_argument("--max_genes", type=int, default=10000)
-    parser.add_argument("--max_pct_mt", type=float, default=20.0)
-    parser.add_argument("--mito_prefix", default="MT-")
-    parser.add_argument("--ribo_prefix", nargs="+", default=["RPS", "RPL"])
+    parser.add_argument("--min_genes", type=int, required=True)
+    parser.add_argument("--max_genes", type=int, required=True)
+    parser.add_argument("--max_pct_mt", type=float, required=True)
+    parser.add_argument("--min_cells", type=int, required=True)
+    parser.add_argument("--mito_prefix", required=True)
+    parser.add_argument("--ribo_prefix", nargs="+", required=True)
     args = parser.parse_args()
 
     # load and annotate raw data
@@ -88,7 +89,7 @@ def main():
     # filter cells, doublets, genes
     adata = filter_cells(adata, args.min_genes, args.max_genes, args.max_pct_mt)
     adata = detect_doublets(adata)
-    adata = filter_genes(adata)
+    adata = filter_genes(adata, args.min_cells)
 
     # save output
     Path(args.output).parent.mkdir(parents=True, exist_ok=True)
