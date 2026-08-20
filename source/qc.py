@@ -52,7 +52,7 @@ def filter_cells(adata, min_genes, max_genes, max_pct_mt):
     return adata
 
 
-def filter_genes(adata):
+def filter_genes(adata, min_cells):
     """Filter out unexpressed genes."""
     logger.info(f"Filtering {adata.n_vars} genes")
     sc.pp.filter_genes(adata, min_cells=min_cells)
