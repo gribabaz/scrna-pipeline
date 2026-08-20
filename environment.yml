@@ -3,9 +3,10 @@ channels:
   - conda-forge
 dependencies:
   - python=3.11
-  - scanpy
-  - scrublet
-  - python-igraph
-  - leidenalg
   - pytest
   - pip
+  - pip:
+      - scanpy
+      - scikit-image
+      - python-igraph
+      - leidenalg
