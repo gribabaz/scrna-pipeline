@@ -1,0 +1,27 @@
+name: Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  pipeline-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check repository
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t scrna-pipeline:latest .
+
+      - name: Run unit tests inside the built image
+        run: docker run --rm -v $(pwd)/test:/pipeline/test scrna-pipeline:latest pytest test/ -v
+
+      - name: Set up Nextflow
+        uses: nf-core/setup-nextflow@v2
+
+      - name: Run pipeline on test data
+        run: nextflow run main.nf -profile test
